@@ -40,9 +40,7 @@ def main() -> None:
                     "humidity": round(random.uniform(35, 50), 1),
                 }
                 try:
-                    r = client.post(
-                        "/api/v1/readings", json=body, headers={"Authorization": f"Bearer {dev['token']}"}
-                    )
+                    r = client.post("/api/v1/readings", json=body, headers={"Authorization": f"Bearer {dev['token']}"})
                     print(f"стая {name}: {body['co2']} ppm → {r.status_code}")
                 except httpx.HTTPError as exc:
                     print(f"стая {name}: грешка {exc}")
