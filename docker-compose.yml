@@ -1,0 +1,53 @@
+# Публикуване на VPS:
+#   cp .env.example .env   # попълнете домейна и тайните
+#   docker compose up -d --build
+#   docker compose exec backend python -m app.seed   # демо училище + тестови акаунти
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: klimaklas
+      POSTGRES_USER: klimaklas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?задайте POSTGRES_PASSWORD в .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U klimaklas"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      KK_ENVIRONMENT: production
+      KK_COOKIE_SECURE: "true"
+      KK_DATABASE_URL: postgresql+psycopg://klimaklas:${POSTGRES_PASSWORD}@db:5432/klimaklas
+      KK_PUBLIC_URL: https://${KK_DOMAIN}
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      KK_DOMAIN: ${KK_DOMAIN:?задайте KK_DOMAIN в .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

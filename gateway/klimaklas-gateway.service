@@ -1,0 +1,17 @@
+# /etc/systemd/system/klimaklas-gateway.service
+# sudo systemctl enable --now klimaklas-gateway
+[Unit]
+Description=KlimaKlas MQTT -> API gateway
+After=network-online.target mosquitto.service
+Wants=network-online.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/klimaklas/gateway
+EnvironmentFile=/home/pi/klimaklas/gateway/.env
+ExecStart=/home/pi/klimaklas/gateway/.venv/bin/python gateway.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

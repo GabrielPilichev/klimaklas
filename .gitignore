@@ -1,0 +1,29 @@
+# Тайни
+.env
+firmware/include/secrets.h
+backend/.demo-devices.json
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+*.db
+gateway/queue.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# PlatformIO
+firmware/.pio/
+
+# Редактори / ОС
+.DS_Store
+.vscode/
+.idea/
+
+# Локални настройки на Claude
+.claude/

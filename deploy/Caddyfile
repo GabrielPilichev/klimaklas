@@ -1,0 +1,25 @@
+# Caddy взима автоматично HTTPS сертификат от Let's Encrypt за домейна.
+{$KK_DOMAIN:localhost} {
+	encode gzip zstd
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+
+	# API и WebSocket → FastAPI
+	handle /api/* {
+		reverse_proxy backend:8000
+	}
+
+	# Уеб панелът (Vue SPA)
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}
