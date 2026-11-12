@@ -24,7 +24,8 @@
 | [`gateway/`](gateway/) | Raspberry Pi шлюз: MQTT → устойчива опашка → API |
 | [`backend/`](backend/) | FastAPI сървър, база данни, известия, тестове |
 | [`frontend/`](frontend/) | Уеб панел (Vue 3 + Chart.js), тъмна/светла тема, мобилна версия |
-| [`deploy/`](deploy/), `docker-compose.yml` | Публикуване с Docker Compose + Caddy |
+| `render.yaml`, `Dockerfile` | Публикуване в Render |
+| [`deploy/`](deploy/), `docker-compose.yml` | Публикуване на собствен сървър с Docker Compose + Caddy |
 | [`docs/`](docs/) | Поръчка на части, схема на свързване |
 
 ## Бърз старт (на собствения компютър)
@@ -121,7 +122,11 @@ pio run -e esp32s3 -t upload && pio device monitor
 
 Ако в училището има Raspberry Pi, в `include/config.h` задайте `USE_MQTT_GATEWAY 1`. Инсталация на шлюза: [`gateway/README.md`](gateway/README.md).
 
-## Публикуване на VPS
+## Публикуване в Render (безплатно)
+
+Репото съдържа [`render.yaml`](render.yaml) и [`Dockerfile`](Dockerfile): една уеб услуга сервира API-то и панела, а базата е PostgreSQL на Render. Стъпките са в [`docs/deploy-render.md`](docs/deploy-render.md).
+
+## Публикуване на собствен VPS
 
 ```bash
 git clone <repo> klimaklas && cd klimaklas

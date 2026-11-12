@@ -1,0 +1,38 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Dashboard → New → Blueprint → изберете репото. Създава базата и уеб услугата наведнъж.
+databases:
+  - name: klimaklas-db
+    plan: free # безплатната база се изтрива 30 дни след създаването
+    region: frankfurt
+    databaseName: klimaklas
+    user: klimaklas
+    postgresMajorVersion: "17"
+
+services:
+  - type: web
+    name: klimaklas
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: KK_ENVIRONMENT
+        value: production
+      - key: KK_COOKIE_SECURE
+        value: "true"
+      - key: KK_SECRET_KEY
+        generateValue: true
+      - key: KK_DATABASE_URL
+        fromDatabase:
+          name: klimaklas-db
+          property: connectionString
+      - key: KK_SEED_DEMO
+        value: "true"
+      # Паролата на демо акаунтите – въвеждате я вие при създаването (сайтът е публичен).
+      - key: KK_DEMO_PASSWORD
+        sync: false
+      - key: KK_TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: KK_TELEGRAM_CHAT_ID
+        sync: false

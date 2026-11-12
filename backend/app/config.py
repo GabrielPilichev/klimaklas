@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_SECRET = "dev-secret-change-me"  # noqa: S105 – само за разработка, забранен в production
@@ -33,7 +35,22 @@ class Settings(BaseSettings):
     smtp_user: str = ""
     smtp_password: str = ""
     smtp_from: str = "klimaklas@localhost"
-    public_url: str = "http://localhost:5173"
+    public_url: str = ""
+
+    # Готовият Vue панел (frontend/dist). Ако е зададен, FastAPI сервира и панела – така
+    # целият сайт е на един домейн без отделен уеб сървър (напр. в Render).
+    static_dir: str = ""
+    # При старт: ако базата е празна, зареди демо училището (Render няма конзола на безплатния план).
+    seed_demo: bool = False
+
+    def model_post_init(self, _) -> None:
+        # Render дава адреса на услугата в RENDER_EXTERNAL_URL.
+        if not self.public_url:
+            self.public_url = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5173")
+        # Render (и Heroku) дават postgresql://…, а SQLAlchemy иска драйвера psycopg 3.
+        for prefix in ("postgres://", "postgresql://"):
+            if self.database_url.startswith(prefix):
+                self.database_url = "postgresql+psycopg://" + self.database_url.removeprefix(prefix)
 
     def check(self) -> None:
         if self.environment == "production":

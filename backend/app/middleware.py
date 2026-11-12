@@ -2,11 +2,17 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
+from .config import settings
 from .security import CSRF_COOKIE, CSRF_HEADER, SESSION_COOKIE, tokens_equal
 
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 # Тези пътища не използват бисквитка за вход, затова CSRF не ги засяга.
 CSRF_EXEMPT = ("/api/v1/auth/login", "/api/v1/readings")
+# Същата политика като в deploy/Caddyfile – за панела, когато FastAPI го сервира сам.
+DASHBOARD_CSP = (
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+    "connect-src 'self' wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+)
 
 
 class CSRFMiddleware(BaseHTTPMiddleware):
@@ -35,8 +41,13 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         h.setdefault("X-Content-Type-Options", "nosniff")
         h.setdefault("X-Frame-Options", "DENY")
         h.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
-        if not request.url.path.startswith("/api/docs"):
+        path = request.url.path
+        if not path.startswith("/api/"):
+            h.setdefault("Content-Security-Policy", DASHBOARD_CSP)
+        elif not path.startswith("/api/docs"):
             h.setdefault("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'")
+        if settings.cookie_secure:
+            h.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         if request.url.path.startswith("/api/v1/"):
             h.setdefault("Cache-Control", "no-store")
         return response

@@ -6,7 +6,7 @@
 #define WIFI_PASSWORD "parola-na-mrezhata"
 
 // Адрес на API (без наклонена черта в края)
-#define API_BASE_URL "https://klimaklas.example.bg"
+#define API_BASE_URL "https://klimaklas.onrender.com"  // адресът от Render (без / накрая)
 
 // Токен на устройството – получава се от „Администрация → Устройства“ в уеб панела.
 #define DEVICE_TOKEN "kk_..."
