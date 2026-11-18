@@ -24,7 +24,7 @@ ESP32-S3 има две I²C шини, затова всеки модул се с
 | STCC4 сензор | 3V3 | GND | GPIO 4 | GPIO 5 |
 | OLED дисплей | 3V3 | GND | GPIO 6 | GPIO 7 |
 
-(Пиновете са зададени в `firmware/include/config.h`.)
+(Пиновете са зададени в `firmware/include/config.h`.) Подробно сглобяване: [`sglobyavane.md`](sglobyavane.md).
 
 ## Бележки
 

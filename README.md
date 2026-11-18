@@ -118,6 +118,8 @@ cp include/secrets.example.h include/secrets.h   # Wi-Fi, адрес на API, �
 pio run -e esp32s3 -t upload && pio device monitor
 ```
 
+Пълни инструкции за сглобяване, запояване и проверка: [`docs/sglobyavane.md`](docs/sglobyavane.md).
+
 Токен за устройство се взима от **Администрация → Устройства → Регистрирай устройство**.
 
 Ако в училището има Raspberry Pi, в `include/config.h` задайте `USE_MQTT_GATEWAY 1`. Инсталация на шлюза: [`gateway/README.md`](gateway/README.md).
