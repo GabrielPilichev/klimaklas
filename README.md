@@ -1,5 +1,14 @@
 # КлимаКлас
 
+> **In English:** KlimaKlas is a classroom air-quality network. Low-cost ESP32-S3 nodes with a
+> CO₂ sensor measure CO₂, temperature and humidity every minute and send them over MQTT (via an
+> optional Raspberry Pi gateway with a durable offline queue) or directly over HTTPS to a
+> FastAPI + PostgreSQL backend. A Vue 3 dashboard shows every room live, with admin, principal
+> and teacher roles, and alerts the teacher by email or Telegram when CO₂ stays above 1200 ppm
+> for more than 5 minutes. It ships as a Docker image (Render, or Docker Compose + Caddy on a
+> VPS) with GitHub Actions CI (ruff, pytest, PostgreSQL seed check). Built for the NOIT 2026/27
+> national IT olympiad, *Distributed applications* track. The rest of this README is in Bulgarian.
+
 **Мрежа от сензори за въздуха в класните стаи.** Евтини сензорни възли (ESP32-S3 + сензор за CO₂) мерят CO₂, температура и влажност всяка минута и пращат данните към облачен сървър. Уеб панелът показва всяка стая на живо и праща известие на учителя („Отворете прозореца в стая 214“), когато CO₂ е над 1200 ppm повече от 5 минути.
 
 Проект за НОИТ 2026/2027, направление „Разпределени приложения“. Лиценз: GNU GPL v3.
